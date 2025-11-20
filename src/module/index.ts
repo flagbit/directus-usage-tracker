@@ -8,7 +8,7 @@
  */
 
 import { defineModule } from '@directus/extensions-sdk';
-import { MODULE_CONFIG } from '../shared/constants';
+import AnalyticsDashboard from './views/AnalyticsDashboard.vue';
 
 /**
  * Usage Analytics Module
@@ -20,45 +20,34 @@ import { MODULE_CONFIG } from '../shared/constants';
  * - IP-Based Traffic Analysis (User Story 3)
  */
 export default defineModule({
-  id: MODULE_CONFIG.ID,
-  name: MODULE_CONFIG.NAME,
-  icon: MODULE_CONFIG.ICON,
-  color: MODULE_CONFIG.COLOR,
+  id: 'usage-analytics',
+  name: 'Usage Analytics',
+  icon: 'analytics',
 
   routes: [
     {
+      name: 'usage-analytics',
       path: '',
-      redirect: '/usage-analytics/storage',
+      component: AnalyticsDashboard,
+      beforeEnter() {
+        return '/usage-analytics/storage';
+      },
     },
     {
       path: 'storage',
-      component: () => import('./views/AnalyticsDashboard.vue'),
-      meta: {
-        title: 'Collection Storage',
-        description: 'View storage usage for all collections',
-      },
+      component: AnalyticsDashboard,
     },
     {
       path: 'activity',
-      component: () => import('./views/AnalyticsDashboard.vue'),
-      meta: {
-        title: 'API Activity',
-        description: 'Analyze API request patterns',
-      },
+      component: AnalyticsDashboard,
     },
     {
       path: 'settings',
-      component: () => import('./views/AnalyticsDashboard.vue'),
-      meta: {
-        title: 'Settings',
-        description: 'Configure analytics settings',
-      },
+      component: AnalyticsDashboard,
     },
   ],
 
-  preRegisterCheck(user, permissions) {
-    // Only show module to admin users
-    // TODO: Make this configurable via module settings
-    return user?.role?.admin_access === true;
+  preRegisterCheck(user) {
+    return user.admin_access === true;
   },
 });

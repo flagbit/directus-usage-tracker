@@ -1,26 +1,5 @@
 <template>
   <div class="collection-view">
-    <!-- Header Controls -->
-    <div class="view-header">
-      <div class="header-left">
-        <h2 class="view-title">Collection Storage</h2>
-        <p class="view-description">View row counts and storage usage for all collections</p>
-      </div>
-
-      <div class="header-right">
-        <v-button
-          v-tooltip.bottom="'Refresh Data'"
-          :loading="loading"
-          :disabled="loading"
-          rounded
-          icon
-          @click="handleRefresh"
-        >
-          <v-icon name="refresh" />
-        </v-button>
-      </div>
-    </div>
-
     <!-- Filters -->
     <div class="view-filters">
       <v-checkbox
@@ -52,7 +31,13 @@
     </v-notice>
 
     <!-- Stats Summary -->
-    <div v-if="!loading && !error" class="stats-summary">
+    <div v-if="loading" class="stats-summary">
+      <div v-for="i in 4" :key="i" class="stat-card loading">
+        <v-skeleton-loader type="block-list-item-three-line" />
+      </div>
+    </div>
+
+    <div v-else-if="!error" class="stats-summary">
       <div class="stat-card">
         <div class="stat-icon">
           <v-icon name="folder" />
@@ -105,7 +90,15 @@
       </div>
 
       <div class="chart-container">
+        <!-- Loading State -->
+        <div v-if="loading" class="chart-loading">
+          <v-progress-circular indeterminate />
+          <p class="loading-text">Lade Chart-Daten...</p>
+        </div>
+
+        <!-- Chart -->
         <CollectionChart
+          v-else
           :collections="collections"
           :chart-type="chartType"
           :top-n="showTopTen ? 10 : undefined"
@@ -121,11 +114,16 @@
         <h3 class="section-title">Collection Details</h3>
       </div>
 
+      <!-- Loading State -->
+      <div v-if="loading" class="table-loading">
+        <v-skeleton-loader type="table" />
+      </div>
+
+      <!-- Table -->
       <v-table
-        v-if="!loading && collections.length > 0"
+        v-else-if="collections.length > 0"
         :headers="tableHeaders"
         :items="displayCollections"
-        :loading="loading"
         show-resize
       >
         <template #item.name="{ item }">
@@ -146,10 +144,16 @@
         </template>
       </v-table>
 
-      <div v-else-if="!loading" class="table-empty">
-        <v-icon name="inbox" />
-        <p>No collections found</p>
-      </div>
+      <!-- Empty State -->
+      <v-info
+        v-else
+        icon="inbox"
+        title="Keine Collections gefunden"
+        type="info"
+        center
+      >
+        Keine Collections entsprechen den aktuellen Filterkriterien. Versuchen Sie die Filter anzupassen.
+      </v-info>
     </div>
   </div>
 </template>
@@ -264,36 +268,6 @@ onMounted(async () => {
   flex-direction: column;
   gap: 24px;
   padding: var(--content-padding);
-}
-
-/* Header */
-.view-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.header-left {
-  flex: 1;
-}
-
-.view-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--foreground);
-  margin: 0 0 8px 0;
-}
-
-.view-description {
-  font-size: 14px;
-  color: var(--foreground-subdued);
-  margin: 0;
-}
-
-.header-right {
-  display: flex;
-  gap: 8px;
 }
 
 /* Filters */
@@ -426,18 +400,66 @@ onMounted(async () => {
   font-weight: 500;
 }
 
-.table-empty {
+/* Loading States */
+.stat-card.loading {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 64px;
-  color: var(--foreground-subdued);
+  min-height: 400px;
+  gap: 16px;
 }
 
-.table-empty p {
-  margin: 0;
+.loading-text {
   font-size: 14px;
+  color: var(--foreground-subdued);
+  margin: 0;
+}
+
+.table-loading {
+  min-height: 300px;
+}
+
+/* Interactive States */
+.v-table :deep(tbody tr) {
+  transition: background-color 0.2s ease;
+  cursor: default;
+}
+
+.v-table :deep(tbody tr:hover) {
+  background-color: var(--background-subdued);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .view-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .chart-container {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-summary {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

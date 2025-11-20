@@ -169,11 +169,14 @@ export function useCollectionAnalytics(
         : API_ENDPOINTS.COLLECTIONS;
 
       // Fetch data from API
+      // Note: api.get() returns an Axios response object: { data: {...} }
+      // Our API returns: { data: [...], total_collections: 39, ... }
+      // So we need: result.data.data to get the array
       const result = await api.get<CollectionUsageResponse>(url);
 
       // Update state
-      response.value = result;
-      collections.value = result.data || [];
+      response.value = result.data;
+      collections.value = result.data.data || [];
     } catch (err) {
       console.error('[useCollectionAnalytics] Fetch error:', err);
 

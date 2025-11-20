@@ -12,20 +12,11 @@
 
     <template #actions>
       <v-button
-        v-tooltip.bottom="'Clear Cache'"
-        rounded
-        icon
-        secondary
-        @click="handleClearCache"
-      >
-        <v-icon name="delete_sweep" />
-      </v-button>
-
-      <v-button
         v-tooltip.bottom="'Settings'"
         rounded
         icon
         secondary
+        aria-label="Open settings"
         @click="handleSettings"
       >
         <v-icon name="settings" />
@@ -33,10 +24,33 @@
     </template>
 
     <template #navigation>
-      <v-tabs v-model="activeTab" :items="tabs" />
+      <v-list nav aria-label="Module navigation">
+        <v-list-item
+          v-for="tab in tabs"
+          :key="tab.value"
+          :active="activeTab === tab.value"
+          :to="`/usage-analytics/${tab.value}`"
+          :aria-label="`Navigate to ${tab.text}`"
+          :aria-current="activeTab === tab.value ? 'page' : undefined"
+        >
+          <v-list-item-icon>
+            <v-icon :name="tab.icon" />
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-text-overflow :text="tab.text" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </template>
 
     <div class="dashboard-content">
+      <!-- Debug Info -->
+      <div v-if="!activeTab" class="debug-info">
+        <v-notice type="warning">
+          <p><strong>Debug:</strong> activeTab is not set. Tabs: {{ tabs.length }}</p>
+        </v-notice>
+      </div>
+
       <!-- Collection Storage Tab (User Story 1) -->
       <div v-if="activeTab === 'storage'" class="tab-content">
         <CollectionView />
@@ -53,30 +67,21 @@
           <h3 class="section-title">Analytics Settings</h3>
 
           <div class="settings-section">
-            <h4 class="subsection-title">Cache Settings</h4>
-            <p class="subsection-description">
-              Data is cached for 5 minutes to improve performance.
-            </p>
-            <v-button @click="handleClearCache">
-              <v-icon name="delete_sweep" left />
-              Clear All Cache
-            </v-button>
-          </div>
-
-          <div class="settings-section">
             <h4 class="subsection-title">About</h4>
             <p class="subsection-description">
               <strong>Version:</strong> 1.0.0<br />
               <strong>Extension Type:</strong> Bundle (Module + Endpoint)<br />
-              <strong>Repository:</strong>
-              <a
-                href="https://github.com/directus-community/directus-extension-usage-analytics"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-              </a>
+              <strong>Status:</strong> ✅ Module successfully loaded!<br />
+              <strong>Active Tab:</strong> {{ activeTab }}
             </p>
+          </div>
+
+          <div class="settings-section">
+            <h4 class="subsection-title">Manual Tab Navigation</h4>
+            <div class="tab-buttons">
+              <v-button @click="activeTab = 'storage'">Go to Storage</v-button>
+              <v-button @click="activeTab = 'activity'">Go to Activity</v-button>
+            </div>
           </div>
         </div>
       </div>
@@ -85,8 +90,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
+import { useRouter, useRoute } from 'vue-router';
 import CollectionView from './CollectionView.vue';
 import ActivityView from './ActivityView.vue';
 
@@ -95,12 +101,32 @@ import ActivityView from './ActivityView.vue';
 // ============================================================================
 
 const api = useApi();
+const router = useRouter();
+const route = useRoute();
 
 // ============================================================================
-// State
+// State & Computed
 // ============================================================================
 
-const activeTab = ref<string>('storage');
+/**
+ * Active tab computed from current route path
+ * Maps route paths to tab values:
+ * /usage-analytics/storage -> 'storage'
+ * /usage-analytics/activity -> 'activity'
+ * /usage-analytics/settings -> 'settings'
+ */
+const activeTab = computed({
+  get() {
+    const path = route.path;
+    if (path.includes('/activity')) return 'activity';
+    if (path.includes('/settings')) return 'settings';
+    return 'storage'; // default
+  },
+  set(newTab: string) {
+    // Navigate to the corresponding route when tab changes
+    router.push(`/usage-analytics/${newTab}`);
+  },
+});
 
 // ============================================================================
 // Computed
@@ -113,7 +139,8 @@ const breadcrumb = computed(() => [
   },
 ]);
 
-const tabs = computed(() => [
+// Tab configuration for v-tabs component
+const tabs = ref([
   {
     text: 'Collection Storage',
     value: 'storage',
@@ -136,34 +163,33 @@ const tabs = computed(() => [
 // ============================================================================
 
 /**
- * Clear all analytics cache
- */
-async function handleClearCache(): Promise<void> {
-  try {
-    await api.delete('/usage-analytics-api/cache');
-
-    // Show success notification
-    console.log('[Analytics] Cache cleared successfully');
-
-    // Reload current view
-    window.location.reload();
-  } catch (error) {
-    console.error('[Analytics] Failed to clear cache:', error);
-  }
-}
-
-/**
  * Navigate to settings tab
  */
 function handleSettings(): void {
-  activeTab.value = 'settings';
+  console.log('[AnalyticsDashboard] Navigating to settings tab');
+  router.push('/usage-analytics/settings');
 }
+
+// ============================================================================
+// Lifecycle & Watchers
+// ============================================================================
+
+onMounted(() => {
+  console.log('[AnalyticsDashboard] Component mounted');
+  console.log('[AnalyticsDashboard] Current route:', route.path);
+  console.log('[AnalyticsDashboard] Active tab:', activeTab.value);
+  console.log('[AnalyticsDashboard] Tabs:', tabs.value);
+});
+
+watch(() => route.path, (newPath) => {
+  console.log('[AnalyticsDashboard] Route changed to:', newPath);
+  console.log('[AnalyticsDashboard] Active tab now:', activeTab.value);
+});
 </script>
 
 <style scoped>
 .dashboard-content {
   padding: var(--content-padding);
-  padding-top: var(--content-padding-bottom);
 }
 
 .tab-content {
@@ -264,5 +290,17 @@ function handleSettings(): void {
   --v-button-color: var(--primary);
   --v-button-background-color-hover: var(--primary-25);
   --v-button-color-hover: var(--primary);
+}
+
+/* Debug Info */
+.debug-info {
+  margin-bottom: 24px;
+}
+
+/* Tab Buttons */
+.tab-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 </style>

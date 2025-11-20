@@ -179,10 +179,11 @@ export function useActivityAnalytics(
         : API_ENDPOINTS.ACTIVITY;
 
       // Fetch data from API
+      // Note: api.get() returns Axios response: { data: {...} }
       const result = await api.get<ActivityStatistics>(url);
 
       // Update state
-      statistics.value = result;
+      statistics.value = result.data;
     } catch (err) {
       console.error('[useActivityAnalytics] Fetch error:', err);
 
@@ -259,9 +260,10 @@ export function useActivityAnalytics(
         : `${API_ENDPOINTS.ACTIVITY}/ips`;
 
       // Fetch data from API
+      // Note: api.get() returns Axios response: { data: {...} }
       const result = await api.get<{ ips: Array<{ ip: string; count: number; percentage: number }> }>(url);
 
-      return result.ips;
+      return result.data.ips;
     } catch (err) {
       console.error('[useActivityAnalytics] Fetch top IPs error:', err);
 
@@ -329,10 +331,11 @@ export function useActivityAnalytics(
         : `${API_ENDPOINTS.ACTIVITY}/ips/${encodeURIComponent(ip)}`;
 
       // Fetch data from API
+      // Note: api.get() returns Axios response: { data: {...} }
       const result = await api.get<ActivityStatistics>(url);
 
       // Update state
-      statistics.value = result;
+      statistics.value = result.data;
     } catch (err) {
       console.error('[useActivityAnalytics] Fetch IP activity error:', err);
 
