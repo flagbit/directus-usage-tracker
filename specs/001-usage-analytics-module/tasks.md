@@ -89,13 +89,13 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 ### Frontend Implementation for User Story 1
 
-- [ ] T029 [P] [US1] Create useCollectionAnalytics composable in src/module/composables/use-collection-analytics.ts (API calls, state management)
-- [ ] T030 [P] [US1] Create CollectionChart component in src/module/components/CollectionChart.vue (Bar chart with Chart.js)
-- [ ] T031 [P] [US1] Create TopTenToggle component in src/module/components/TopTenToggle.vue (Filter toggle for Top N)
-- [ ] T032 [P] [US1] Create CollectionView component in src/module/views/CollectionView.vue (Main collection storage view with chart and table)
-- [ ] T033 [US1] Create AnalyticsDashboard component in src/module/views/AnalyticsDashboard.vue (Main dashboard with tabs)
-- [ ] T034 [US1] Configure routes in src/module/routes.ts (default route to collection view)
-- [ ] T035 [US1] Update module entry point in src/module/index.ts with routes
+- [X] T029 [P] [US1] Create useCollectionAnalytics composable in src/module/composables/use-collection-analytics.ts (API calls, state management)
+- [X] T030 [P] [US1] Create CollectionChart component in src/module/components/CollectionChart.vue (Bar chart with Chart.js)
+- [X] T031 [P] [US1] Create TopTenToggle component in src/module/components/TopTenToggle.vue (Filter toggle for Top N)
+- [X] T032 [P] [US1] Create CollectionView component in src/module/views/CollectionView.vue (Main collection storage view with chart and table)
+- [X] T033 [US1] Create AnalyticsDashboard component in src/module/views/AnalyticsDashboard.vue (Main dashboard with tabs)
+- [X] T034 [US1] Configure routes in src/module/routes.ts (default route to collection view)
+- [X] T035 [US1] Update module entry point in src/module/index.ts with routes
 
 ### Polish for User Story 1
 

@@ -32,7 +32,7 @@ export default defineModule({
     },
     {
       path: 'storage',
-      component: () => import('./views/PlaceholderView.vue'),
+      component: () => import('./views/AnalyticsDashboard.vue'),
       meta: {
         title: 'Collection Storage',
         description: 'View storage usage for all collections',
@@ -40,7 +40,7 @@ export default defineModule({
     },
     {
       path: 'activity',
-      component: () => import('./views/PlaceholderView.vue'),
+      component: () => import('./views/AnalyticsDashboard.vue'),
       meta: {
         title: 'API Activity',
         description: 'Analyze API request patterns',
@@ -48,7 +48,7 @@ export default defineModule({
     },
     {
       path: 'settings',
-      component: () => import('./views/PlaceholderView.vue'),
+      component: () => import('./views/AnalyticsDashboard.vue'),
       meta: {
         title: 'Settings',
         description: 'Configure analytics settings',
