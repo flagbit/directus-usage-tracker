@@ -1,0 +1,667 @@
+openapi: 3.0.3
+info:
+  title: Directus Usage Analytics API
+  description: Custom API endpoints for the Directus Usage Analytics Module
+  version: 1.0.0
+  contact:
+    name: DirectusUsage Development Team
+
+servers:
+  - url: '{directusUrl}/analytics'
+    description: Directus instance with analytics extension
+    variables:
+      directusUrl:
+        default: http://localhost:8055
+        description: Base URL of your Directus instance
+
+tags:
+  - name: Collections
+    description: Collection storage usage endpoints
+  - name: Activity
+    description: API activity analytics endpoints
+  - name: Time Series
+    description: Time-series data endpoints
+
+paths:
+  /collections:
+    get:
+      tags:
+        - Collections
+      summary: Get collection storage usage
+      description: |
+        Returns row counts and metadata for all collections in the Directus instance.
+        Includes both visible and system (directus_*) collections.
+      operationId: getCollectionUsage
+      parameters:
+        - name: include_system
+          in: query
+          description: Whether to include system collections (directus_*)
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: sort
+          in: query
+          description: Sort field
+          required: false
+          schema:
+            type: string
+            enum: [row_count, collection, name]
+            default: row_count
+        - name: order
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - name: limit
+          in: query
+          description: Maximum number of results (for Top N)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        '200':
+          description: Collection usage data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionUsageResponse'
+        '401':
+          description: Unauthorized - admin role required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /activity:
+    get:
+      tags:
+        - Activity
+      summary: Get API activity statistics
+      description: |
+        Returns aggregated statistics about API requests from the directus_activity table.
+        Supports filtering by collection, IP address, date range, and more.
+      operationId: getActivityStatistics
+      parameters:
+        - name: start_date
+          in: query
+          description: Start date for activity analysis (ISO 8601)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: '2025-01-13T00:00:00Z'
+        - name: end_date
+          in: query
+          description: End date for activity analysis (ISO 8601)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: '2025-01-20T23:59:59Z'
+        - name: collections
+          in: query
+          description: Filter by specific collections (comma-separated)
+          required: false
+          schema:
+            type: string
+            example: 'articles,users,products'
+        - name: ip_addresses
+          in: query
+          description: Filter by specific IP addresses (comma-separated)
+          required: false
+          schema:
+            type: string
+            example: '192.168.1.1,10.0.0.5'
+        - name: actions
+          in: query
+          description: Filter by action types (comma-separated)
+          required: false
+          schema:
+            type: string
+            example: 'create,update,delete'
+        - name: limit
+          in: query
+          description: Maximum number of collections to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Activity statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityAnalyticsResponse'
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - admin role required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /activity/timeseries:
+    get:
+      tags:
+        - Time Series
+      summary: Get time-series activity data
+      description: |
+        Returns time-series data for API requests, aggregated by hour or day.
+        Useful for trend visualization and charts.
+      operationId: getTimeSeriesData
+      parameters:
+        - name: start_date
+          in: query
+          description: Start date (ISO 8601)
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          description: End date (ISO 8601)
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: granularity
+          in: query
+          description: Time aggregation granularity
+          required: false
+          schema:
+            type: string
+            enum: [hour, day, week, month]
+            default: day
+        - name: collection
+          in: query
+          description: Filter by specific collection
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Time-series data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSeriesResponse'
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /activity/ips/{ip}:
+    get:
+      tags:
+        - Activity
+      summary: Get activity for specific IP
+      description: Returns detailed activity statistics for a single IP address
+      operationId: getIPActivity
+      parameters:
+        - name: ip
+          in: path
+          description: IP address to analyze
+          required: true
+          schema:
+            type: string
+            example: '192.168.1.100'
+        - name: start_date
+          in: query
+          description: Start date (ISO 8601)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          description: End date (ISO 8601)
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: IP activity retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IPActivitySummary'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: IP not found in activity logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CollectionUsage:
+      type: object
+      required:
+        - collection
+        - name
+        - row_count
+        - is_system
+      properties:
+        collection:
+          type: string
+          example: 'articles'
+        name:
+          type: string
+          example: 'Articles'
+        row_count:
+          type: integer
+          format: int64
+          example: 15432
+        is_system:
+          type: boolean
+          example: false
+        icon:
+          type: string
+          nullable: true
+          example: 'article'
+        color:
+          type: string
+          nullable: true
+          example: '#2ECDA7'
+        last_activity:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2025-01-20T14:32:18Z'
+        size_estimate_mb:
+          type: number
+          format: double
+          nullable: true
+          example: 45.3
+
+    CollectionUsageResponse:
+      type: object
+      required:
+        - data
+        - total_collections
+        - total_rows
+        - query_time_ms
+        - cached
+        - timestamp
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionUsage'
+        total_collections:
+          type: integer
+          example: 23
+        total_rows:
+          type: integer
+          format: int64
+          example: 145832
+        query_time_ms:
+          type: number
+          format: double
+          example: 345.67
+        cached:
+          type: boolean
+          example: true
+        timestamp:
+          type: string
+          format: date-time
+          example: '2025-01-20T15:42:33Z'
+
+    ActivityStatistics:
+      type: object
+      required:
+        - collection
+        - request_count
+        - unique_users
+        - unique_ips
+        - action_breakdown
+        - time_range
+      properties:
+        collection:
+          type: string
+          example: 'articles'
+        request_count:
+          type: integer
+          format: int64
+          example: 8542
+        unique_users:
+          type: integer
+          example: 23
+        unique_ips:
+          type: integer
+          example: 15
+        action_breakdown:
+          type: object
+          required:
+            - create
+            - read
+            - update
+            - delete
+            - other
+          properties:
+            create:
+              type: integer
+              example: 245
+            read:
+              type: integer
+              example: 7832
+            update:
+              type: integer
+              example: 423
+            delete:
+              type: integer
+              example: 12
+            other:
+              type: integer
+              example: 30
+        time_range:
+          type: object
+          required:
+            - start
+            - end
+          properties:
+            start:
+              type: string
+              format: date-time
+            end:
+              type: string
+              format: date-time
+        top_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserActivitySummary'
+        top_ips:
+          type: array
+          items:
+            $ref: '#/components/schemas/IPActivitySummary'
+
+    ActivityAnalyticsResponse:
+      type: object
+      required:
+        - data
+        - total_requests
+        - query_time_ms
+        - cached
+        - timestamp
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityStatistics'
+        filters_applied:
+          $ref: '#/components/schemas/DashboardFilters'
+        total_requests:
+          type: integer
+          format: int64
+          example: 45821
+        query_time_ms:
+          type: number
+          format: double
+          example: 892.34
+        cached:
+          type: boolean
+          example: false
+        timestamp:
+          type: string
+          format: date-time
+
+    UserActivitySummary:
+      type: object
+      required:
+        - request_count
+        - collections_accessed
+        - last_activity
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+          example: '4a7c8e92-f5d1-4b3e-9c2a-8f1e6d4b5a7c'
+        user_email:
+          type: string
+          format: email
+          nullable: true
+          example: 'admin@example.com'
+        request_count:
+          type: integer
+          example: 1245
+        collections_accessed:
+          type: array
+          items:
+            type: string
+          example: ['articles', 'users', 'products']
+        last_activity:
+          type: string
+          format: date-time
+
+    IPActivitySummary:
+      type: object
+      required:
+        - ip
+        - request_count
+        - collections_accessed
+        - user_ids
+        - first_seen
+        - last_seen
+        - is_suspicious
+      properties:
+        ip:
+          type: string
+          example: '192.168.1.100'
+        request_count:
+          type: integer
+          example: 523
+        collections_accessed:
+          type: array
+          items:
+            type: string
+          example: ['articles', 'products']
+        user_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          example: ['4a7c8e92-f5d1-4b3e-9c2a-8f1e6d4b5a7c']
+        first_seen:
+          type: string
+          format: date-time
+        last_seen:
+          type: string
+          format: date-time
+        is_suspicious:
+          type: boolean
+          example: false
+
+    TimeSeriesDataPoint:
+      type: object
+      required:
+        - timestamp
+        - value
+        - label
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: '2025-01-20T14:00:00Z'
+        value:
+          type: integer
+          example: 342
+        collection:
+          type: string
+          nullable: true
+          example: 'articles'
+        label:
+          type: string
+          example: '2:00 PM'
+
+    TimeSeriesResponse:
+      type: object
+      required:
+        - data
+        - granularity
+        - query_time_ms
+        - cached
+        - timestamp
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSeriesDataPoint'
+        granularity:
+          type: string
+          enum: [hour, day, week, month]
+          example: 'hour'
+        filters_applied:
+          $ref: '#/components/schemas/DashboardFilters'
+        query_time_ms:
+          type: number
+          format: double
+        cached:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+
+    DashboardFilters:
+      type: object
+      required:
+        - collections
+        - ip_addresses
+        - user_ids
+        - date_range
+        - actions
+        - top_n_limit
+        - include_system_collections
+      properties:
+        collections:
+          type: array
+          items:
+            type: string
+          example: []
+        ip_addresses:
+          type: array
+          items:
+            type: string
+          example: []
+        user_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          example: []
+        date_range:
+          type: object
+          required:
+            - start
+            - end
+          properties:
+            start:
+              type: string
+              format: date-time
+            end:
+              type: string
+              format: date-time
+        actions:
+          type: array
+          items:
+            type: string
+            enum: [create, update, delete, login]
+          example: []
+        top_n_limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        include_system_collections:
+          type: boolean
+          default: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - timestamp
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              example: 'INVALID_QUERY'
+            message:
+              type: string
+              example: 'Invalid date range: start_date must be before end_date'
+            details:
+              type: object
+              nullable: true
+              additionalProperties: true
+        timestamp:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Directus access token (admin role required)
+
+security:
+  - bearerAuth: []

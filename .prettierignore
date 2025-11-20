@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Generated files
+*.tsbuildinfo
+coverage/
+
+# Specs and documentation
+specs/
+*.md
+!README.md
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
