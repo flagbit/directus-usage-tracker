@@ -127,17 +127,17 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 ### Frontend Implementation for User Story 2
 
-- [ ] T045 [P] [US2] Create useActivityAnalytics composable in src/module/composables/use-activity-analytics.ts (API calls for activity data)
-- [ ] T046 [P] [US2] Create ActivityChart component in src/module/components/ActivityChart.vue (Bar/Pie chart for activity)
-- [ ] T047 [P] [US2] Create FilterPanel component in src/module/components/FilterPanel.vue (Collection filter, date range, Top N)
-- [ ] T048 [US2] Create ActivityView component in src/module/views/ActivityView.vue (Activity tab with filters and chart)
-- [ ] T049 [US2] Add activity route to src/module/routes.ts
-- [ ] T050 [US2] Update AnalyticsDashboard to include Activity tab
+- [X] T045 [P] [US2] Create useActivityAnalytics composable in src/module/composables/use-activity-analytics.ts (API calls for activity data)
+- [X] T046 [P] [US2] Create ActivityChart component in src/module/components/ActivityChart.vue (Bar/Pie chart for activity)
+- [X] T047 [P] [US2] Create FilterPanel component in src/module/components/FilterPanel.vue (Collection filter, date range, Top N)
+- [X] T048 [US2] Create ActivityView component in src/module/views/ActivityView.vue (Activity tab with filters and chart)
+- [X] T049 [US2] Add activity route to src/module/routes.ts
+- [X] T050 [US2] Update AnalyticsDashboard to include Activity tab
 
 ### Polish for User Story 2
 
-- [ ] T051 [US2] Add date range filtering (last 7 days, last 30 days, custom)
-- [ ] T052 [US2] Add action breakdown chart (create, read, update, delete counts)
+- [X] T051 [US2] Add date range filtering (last 7 days, last 30 days, custom)
+- [X] T052 [US2] Add action breakdown chart (create, read, update, delete counts)
 - [ ] T053 [US2] Add JSDoc comments to activity service and composable
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently

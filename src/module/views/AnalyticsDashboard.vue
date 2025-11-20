@@ -42,15 +42,9 @@
         <CollectionView />
       </div>
 
-      <!-- Activity Tab (User Story 2) - Placeholder -->
+      <!-- Activity Tab (User Story 2) -->
       <div v-else-if="activeTab === 'activity'" class="tab-content">
-        <div class="placeholder-content">
-          <v-icon name="bolt" class="placeholder-icon" />
-          <h3 class="placeholder-title">API Activity Analysis</h3>
-          <p class="placeholder-description">
-            Coming in Phase 4 (User Story 2): Analyze API request patterns and activity logs
-          </p>
-        </div>
+        <ActivityView />
       </div>
 
       <!-- Settings Tab -->
@@ -94,6 +88,7 @@
 import { ref, computed } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import CollectionView from './CollectionView.vue';
+import ActivityView from './ActivityView.vue';
 
 // ============================================================================
 // Composables
@@ -128,7 +123,6 @@ const tabs = computed(() => [
     text: 'API Activity',
     value: 'activity',
     icon: 'bolt',
-    disabled: true, // Phase 4
   },
   {
     text: 'Settings',
