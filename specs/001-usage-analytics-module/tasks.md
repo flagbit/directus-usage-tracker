@@ -31,17 +31,17 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 **Purpose**: Initialize Directus Bundle Extension with proper configuration for publishing
 
-- [ ] T001 Initialize bundle extension using npx create-directus-extension@latest (type: bundle, name: directus-extension-usage-analytics)
-- [ ] T002 Configure package.json with bundle configuration, keywords, and host versions
-- [ ] T003 Add module extension to bundle using npm run add (type: module, name: usage-analytics)
-- [ ] T004 Add endpoint extension to bundle using npm run add (type: endpoint, name: usage-analytics-api)
-- [ ] T005 [P] Configure tsconfig.json with strict mode and proper module resolution
-- [ ] T006 [P] Install dependencies: chart.js, vue-chart-3, @directus/sdk
-- [ ] T007 [P] Configure ESLint with TypeScript, Vue, and Prettier rules
-- [ ] T008 [P] Set up Vitest configuration for testing
-- [ ] T009 [P] Create .gitignore file with dist/, node_modules/, .DS_Store
-- [ ] T010 [P] Create LICENSE file (MIT license for community adoption)
-- [ ] T011 [P] Initialize CHANGELOG.md with v1.0.0 entry
+- [X] T001 Initialize bundle extension using npx create-directus-extension@latest (type: bundle, name: directus-extension-usage-analytics)
+- [X] T002 Configure package.json with bundle configuration, keywords, and host versions
+- [X] T003 Add module extension to bundle using npm run add (type: module, name: usage-analytics)
+- [X] T004 Add endpoint extension to bundle using npm run add (type: endpoint, name: usage-analytics-api)
+- [X] T005 [P] Configure tsconfig.json with strict mode and proper module resolution
+- [X] T006 [P] Install dependencies: chart.js, vue-chart-3, @directus/sdk
+- [X] T007 [P] Configure ESLint with TypeScript, Vue, and Prettier rules
+- [X] T008 [P] Set up Vitest configuration for testing
+- [X] T009 [P] Create .gitignore file with dist/, node_modules/, .DS_Store
+- [X] T010 [P] Create LICENSE file (MIT license for community adoption)
+- [X] T011 [P] Initialize CHANGELOG.md with v1.0.0 entry
 
 ---
 
@@ -51,15 +51,15 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T012 Create shared TypeScript interfaces in src/shared/types.ts (DirectusActivity, DirectusCollection, CollectionUsage, ActivityStatistics)
-- [ ] T013 [P] Create shared constants in src/shared/constants.ts (cache TTL, pagination defaults, API routes)
-- [ ] T014 [P] Create shared validators in src/shared/validators.ts (input validation functions)
-- [ ] T015 [P] Create database helpers in src/endpoint/utils/database-helpers.ts (cross-database COUNT compatibility, Knex query builders)
-- [ ] T016 [P] Create chart helpers in src/module/utils/chart-helpers.ts (Chart.js configuration generators)
-- [ ] T017 [P] Create data formatters in src/module/utils/data-formatters.ts (number formatting, date formatting)
-- [ ] T018 Implement cache service in src/endpoint/services/cache-service.ts (optional Redis caching with 5-minute TTL)
-- [ ] T019 [P] Set up Endpoint entry point in src/endpoint/index.ts (defineEndpoint with router setup)
-- [ ] T020 [P] Set up Module entry point in src/module/index.ts (defineModule with routes configuration)
+- [X] T012 Create shared TypeScript interfaces in src/shared/types.ts (DirectusActivity, DirectusCollection, CollectionUsage, ActivityStatistics)
+- [X] T013 [P] Create shared constants in src/shared/constants.ts (cache TTL, pagination defaults, API routes)
+- [X] T014 [P] Create shared validators in src/shared/validators.ts (input validation functions)
+- [X] T015 [P] Create database helpers in src/endpoint/utils/database-helpers.ts (cross-database COUNT compatibility, Knex query builders)
+- [X] T016 [P] Create chart helpers in src/module/utils/chart-helpers.ts (Chart.js configuration generators)
+- [X] T017 [P] Create data formatters in src/module/utils/data-formatters.ts (number formatting, date formatting)
+- [X] T018 Implement cache service in src/endpoint/services/cache-service.ts (optional Redis caching with 5-minute TTL)
+- [X] T019 [P] Set up Endpoint entry point in src/endpoint/index.ts (defineEndpoint with router setup)
+- [X] T020 [P] Set up Module entry point in src/module/index.ts (defineModule with routes configuration)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -75,17 +75,17 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T021 [P] [US1] Contract test for GET /usage-analytics-api/collections endpoint in tests/contract/collections-api.test.ts
-- [ ] T022 [P] [US1] Integration test for collection service aggregation in tests/integration/collection-service.test.ts
-- [ ] T023 [P] [US1] Unit test for CollectionChart component in tests/unit/components/CollectionChart.test.ts
-- [ ] T024 [P] [US1] Unit test for chart helpers in tests/unit/utils/chart-helpers.test.ts
+- [X] T021 [P] [US1] Contract test for GET /usage-analytics-api/collections endpoint in tests/contract/collections-api.test.ts
+- [X] T022 [P] [US1] Integration test for collection service aggregation in tests/integration/collection-service.test.ts
+- [X] T023 [P] [US1] Unit test for CollectionChart component in tests/unit/components/CollectionChart.test.ts
+- [X] T024 [P] [US1] Unit test for chart helpers in tests/unit/utils/chart-helpers.test.ts
 
 ### Backend Implementation for User Story 1
 
-- [ ] T025 [P] [US1] Implement CollectionService in src/endpoint/services/collection-service.ts (query all collections, get row counts via Knex)
-- [ ] T026 [P] [US1] Create query builders in src/endpoint/utils/query-builders.ts (COUNT query builder with cross-database compatibility)
-- [ ] T027 [US1] Implement GET /collections route in src/endpoint/routes/collections.ts (fetch collections, aggregate counts, sort by row_count)
-- [ ] T028 [US1] Register collections route in src/endpoint/index.ts router
+- [X] T025 [P] [US1] Implement CollectionService in src/endpoint/services/collection-service.ts (query all collections, get row counts via Knex)
+- [X] T026 [P] [US1] Create query builders in src/endpoint/utils/query-builders.ts (COUNT query builder with cross-database compatibility)
+- [X] T027 [US1] Implement GET /collections route in src/endpoint/routes/collections.ts (fetch collections, aggregate counts, sort by row_count)
+- [X] T028 [US1] Register collections route in src/endpoint/index.ts router
 
 ### Frontend Implementation for User Story 1
 

@@ -10,6 +10,7 @@
 import { defineEndpoint } from '@directus/extensions-sdk';
 import type { Request, Response } from 'express';
 import { createCacheService } from './services/cache-service';
+import { registerCollectionsRoutes } from './routes/collections';
 
 /**
  * Usage Analytics API Endpoint
@@ -51,42 +52,19 @@ export default defineEndpoint({
     // ========================================================================
 
     /**
-     * GET /usage-analytics-api/collections
-     * Get storage usage for all collections
+     * Register collections routes
+     * Provides collection storage usage and analytics endpoints
      *
-     * Query Parameters:
-     * - include_system: boolean (default: true)
-     * - sort: string (row_count|collection|name)
-     * - order: string (asc|desc)
-     * - limit: number (1-100)
-     *
-     * TODO: Implement in Phase 3 (User Story 1)
+     * Routes:
+     * - GET /collections - List all collections with row counts
+     * - GET /collections/:collection - Get specific collection stats
+     * - DELETE /collections/cache - Clear collection cache
      */
-    router.get('/collections', async (req: Request, res: Response) => {
-      try {
-        // Placeholder implementation
-        res.status(501).json({
-          error: {
-            code: 'NOT_IMPLEMENTED',
-            message: 'Collection usage endpoint not yet implemented',
-            details: {
-              phase: 'Phase 3 - User Story 1',
-              available_in: 'next_implementation_phase',
-            },
-          },
-          timestamp: new Date().toISOString(),
-        });
-      } catch (error: any) {
-        logger.error('[Collections] Error:', error);
-        res.status(500).json({
-          error: {
-            code: 'DATABASE_ERROR',
-            message: error.message || 'Failed to fetch collection usage',
-            details: null,
-          },
-          timestamp: new Date().toISOString(),
-        });
-      }
+    registerCollectionsRoutes(router, {
+      database,
+      getSchema,
+      logger,
+      cacheService,
     });
 
     // ========================================================================
