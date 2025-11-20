@@ -121,9 +121,9 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 ### Backend Implementation for User Story 2
 
-- [ ] T042 [P] [US2] Implement ActivityService in src/endpoint/services/activity-service.ts (query directus_activity, aggregate by collection)
-- [ ] T043 [US2] Implement GET /activity route in src/endpoint/routes/activity.ts (aggregate requests, filter by collection, Top 10)
-- [ ] T044 [US2] Register activity route in src/endpoint/index.ts router
+- [X] T042 [P] [US2] Implement ActivityService in src/endpoint/services/activity-service.ts (query directus_activity, aggregate by collection)
+- [X] T043 [US2] Implement GET /activity route in src/endpoint/routes/activity.ts (aggregate requests, filter by collection, Top 10)
+- [X] T044 [US2] Register activity route in src/endpoint/index.ts router
 
 ### Frontend Implementation for User Story 2
 

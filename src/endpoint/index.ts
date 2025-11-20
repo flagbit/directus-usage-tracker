@@ -11,6 +11,7 @@ import { defineEndpoint } from '@directus/extensions-sdk';
 import type { Request, Response } from 'express';
 import { createCacheService } from './services/cache-service';
 import { registerCollectionsRoutes } from './routes/collections';
+import { registerActivityRoutes } from './routes/activity';
 
 /**
  * Usage Analytics API Endpoint
@@ -72,83 +73,18 @@ export default defineEndpoint({
     // ========================================================================
 
     /**
-     * GET /usage-analytics-api/activity
-     * Get API activity statistics
+     * Register activity routes
+     * Provides activity statistics and API request pattern analysis endpoints
      *
-     * Query Parameters:
-     * - start_date: ISO 8601 date
-     * - end_date: ISO 8601 date
-     * - collections: comma-separated collection names
-     * - ip_addresses: comma-separated IP addresses
-     * - actions: comma-separated action types
-     * - limit: number (1-100)
-     *
-     * TODO: Implement in Phase 4 (User Story 2)
+     * Routes:
+     * - GET /activity - Get comprehensive activity statistics
+     * - GET /activity/timeseries - Get time-series data (Phase 4 polish)
+     * - DELETE /activity/cache - Clear activity cache
      */
-    router.get('/activity', async (req: Request, res: Response) => {
-      try {
-        // Placeholder implementation
-        res.status(501).json({
-          error: {
-            code: 'NOT_IMPLEMENTED',
-            message: 'Activity statistics endpoint not yet implemented',
-            details: {
-              phase: 'Phase 4 - User Story 2',
-              available_in: 'next_implementation_phase',
-            },
-          },
-          timestamp: new Date().toISOString(),
-        });
-      } catch (error: any) {
-        logger.error('[Activity] Error:', error);
-        res.status(500).json({
-          error: {
-            code: 'DATABASE_ERROR',
-            message: error.message || 'Failed to fetch activity statistics',
-            details: null,
-          },
-          timestamp: new Date().toISOString(),
-        });
-      }
-    });
-
-    /**
-     * GET /usage-analytics-api/activity/timeseries
-     * Get time-series activity data
-     *
-     * Query Parameters:
-     * - start_date: ISO 8601 date (required)
-     * - end_date: ISO 8601 date (required)
-     * - granularity: hour|day|week|month
-     * - collection: collection name filter
-     *
-     * TODO: Implement in Phase 4 (User Story 2)
-     */
-    router.get('/activity/timeseries', async (req: Request, res: Response) => {
-      try {
-        // Placeholder implementation
-        res.status(501).json({
-          error: {
-            code: 'NOT_IMPLEMENTED',
-            message: 'Time-series endpoint not yet implemented',
-            details: {
-              phase: 'Phase 4 - User Story 2',
-              available_in: 'next_implementation_phase',
-            },
-          },
-          timestamp: new Date().toISOString(),
-        });
-      } catch (error: any) {
-        logger.error('[Timeseries] Error:', error);
-        res.status(500).json({
-          error: {
-            code: 'DATABASE_ERROR',
-            message: error.message || 'Failed to fetch time-series data',
-            details: null,
-          },
-          timestamp: new Date().toISOString(),
-        });
-      }
+    registerActivityRoutes(router, {
+      database,
+      logger,
+      cacheService,
     });
 
     // ========================================================================
