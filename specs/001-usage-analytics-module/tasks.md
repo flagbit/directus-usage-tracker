@@ -99,9 +99,9 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 ### Polish for User Story 1
 
-- [ ] T036 [US1] Add error handling for collection queries (handle permissions errors, empty collections)
-- [ ] T037 [US1] Add loading states and error messages to UI components
-- [ ] T038 [US1] Add JSDoc comments to all exported functions in collection service and composable
+- [X] T036 [US1] Add error handling for collection queries (handle permissions errors, empty collections)
+- [X] T037 [US1] Add loading states and error messages to UI components
+- [X] T038 [US1] Add JSDoc comments to all exported functions in collection service and composable
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
