@@ -24,6 +24,8 @@ npm run build
 - `dist/api.js` (~79KB) - Backend endpoint
 - `dist/app.js` (~244KB) - Frontend module
 
+**Note**: The build process automatically converts `@shared/constants` imports to relative paths for Docker compatibility.
+
 ### 2. Start Directus with Docker
 
 ```bash
