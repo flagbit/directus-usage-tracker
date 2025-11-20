@@ -152,9 +152,9 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 ### Tests for User Story 3
 
-- [ ] T054 [P] [US3] Contract test for GET /usage-analytics-api/activity/ips/:ip endpoint in tests/contract/ip-activity-api.test.ts
-- [ ] T055 [P] [US3] Integration test for IP filtering in activity service in tests/integration/activity-service.test.ts
-- [ ] T056 [P] [US3] Unit test for IP filter component in tests/unit/components/FilterPanel.test.ts
+- [X] T054 [P] [US3] Contract test for GET /usage-analytics-api/activity/ips/:ip endpoint in tests/contract/ip-activity-api.test.ts
+- [X] T055 [P] [US3] Integration test for IP filtering in activity service in tests/integration/ip-activity-service.test.ts
+- [X] T056 [P] [US3] Unit test for IP filter component in tests/unit/components/IPFilterPanel.test.ts
 
 ### Backend Implementation for User Story 3
 
