@@ -212,6 +212,142 @@ export function useActivityAnalytics(
     error.value = null;
   }
 
+  /**
+   * Fetch top IP addresses by request count
+   *
+   * @param options - Query options
+   * @returns Promise that resolves when IPs are fetched
+   *
+   * @example
+   * ```typescript
+   * await fetchTopIPs({ limit: 10, start_date: '2025-01-01T00:00:00Z' });
+   * ```
+   */
+  async function fetchTopIPs(
+    options: ActivityQueryOptions = {}
+  ): Promise<Array<{ ip: string; count: number; percentage: number }>> {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      // Build query parameters
+      const params = new URLSearchParams();
+
+      if (options.start_date) {
+        params.append('start_date', options.start_date);
+      }
+
+      if (options.end_date) {
+        params.append('end_date', options.end_date);
+      }
+
+      if (options.collections && options.collections.length > 0) {
+        params.append('collections', options.collections.join(','));
+      }
+
+      if (options.actions && options.actions.length > 0) {
+        params.append('actions', options.actions.join(','));
+      }
+
+      if (options.limit) {
+        params.append('limit', String(options.limit));
+      }
+
+      const queryString = params.toString();
+      const url = queryString
+        ? `${API_ENDPOINTS.ACTIVITY}/ips?${queryString}`
+        : `${API_ENDPOINTS.ACTIVITY}/ips`;
+
+      // Fetch data from API
+      const result = await api.get<{ ips: Array<{ ip: string; count: number; percentage: number }> }>(url);
+
+      return result.ips;
+    } catch (err) {
+      console.error('[useActivityAnalytics] Fetch top IPs error:', err);
+
+      if (err instanceof Error) {
+        error.value = err.message;
+      } else {
+        error.value = 'Failed to fetch top IP addresses';
+      }
+
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  /**
+   * Fetch activity statistics for a specific IP address
+   *
+   * @param ip - IP address to analyze
+   * @param options - Additional query options
+   * @returns Promise that resolves when IP activity is fetched
+   *
+   * @example
+   * ```typescript
+   * await fetchActivityByIP('192.168.1.100', {
+   *   start_date: '2025-01-01T00:00:00Z',
+   *   limit: 10
+   * });
+   * ```
+   */
+  async function fetchActivityByIP(
+    ip: string,
+    options: Omit<ActivityQueryOptions, 'ip_addresses'> = {}
+  ): Promise<void> {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      // Build query parameters
+      const params = new URLSearchParams();
+
+      if (options.start_date) {
+        params.append('start_date', options.start_date);
+      }
+
+      if (options.end_date) {
+        params.append('end_date', options.end_date);
+      }
+
+      if (options.collections && options.collections.length > 0) {
+        params.append('collections', options.collections.join(','));
+      }
+
+      if (options.actions && options.actions.length > 0) {
+        params.append('actions', options.actions.join(','));
+      }
+
+      if (options.limit) {
+        params.append('limit', String(options.limit));
+      }
+
+      const queryString = params.toString();
+      const url = queryString
+        ? `${API_ENDPOINTS.ACTIVITY}/ips/${encodeURIComponent(ip)}?${queryString}`
+        : `${API_ENDPOINTS.ACTIVITY}/ips/${encodeURIComponent(ip)}`;
+
+      // Fetch data from API
+      const result = await api.get<ActivityStatistics>(url);
+
+      // Update state
+      statistics.value = result;
+    } catch (err) {
+      console.error('[useActivityAnalytics] Fetch IP activity error:', err);
+
+      if (err instanceof Error) {
+        error.value = err.message;
+      } else {
+        error.value = 'Failed to fetch IP activity statistics';
+      }
+
+      statistics.value = null;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   // ============================================================================
   // Return
   // ============================================================================
@@ -232,6 +368,8 @@ export function useActivityAnalytics(
 
     // Methods
     fetchActivity,
+    fetchTopIPs,
+    fetchActivityByIP,
     refresh,
     clearError,
   };

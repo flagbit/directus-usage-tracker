@@ -38,11 +38,21 @@
         @update:model-value="handleDataTypeChange"
       />
     </div>
+
+    <div v-if="showIPFilter && availableIPs.length > 0" class="filter-section">
+      <label class="filter-label">Filter by IP:</label>
+      <v-select
+        v-model="selectedIP"
+        :items="ipFilterOptions"
+        placeholder="Select IP address"
+        @update:model-value="handleIPFilterChange"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, computed } from 'vue';
 import TopTenToggle from './TopTenToggle.vue';
 
 // ============================================================================
@@ -54,7 +64,9 @@ export interface FilterPanelProps {
   showTopNToggle?: boolean;
   showChartType?: boolean;
   showDataType?: boolean;
+  showIPFilter?: boolean;
   topNLimit?: number;
+  availableIPs?: Array<{ ip: string; count: number; percentage: number }>;
 }
 
 const props = withDefaults(defineProps<FilterPanelProps>(), {
@@ -62,7 +74,9 @@ const props = withDefaults(defineProps<FilterPanelProps>(), {
   showTopNToggle: true,
   showChartType: true,
   showDataType: true,
+  showIPFilter: false,
   topNLimit: 10,
+  availableIPs: () => [],
 });
 
 const emit = defineEmits<{
@@ -70,6 +84,7 @@ const emit = defineEmits<{
   'top-n-change': [enabled: boolean];
   'chart-type-change': [chartType: 'bar' | 'pie'];
   'data-type-change': [dataType: 'collection' | 'action'];
+  'ip-filter-change': [ip: string | null];
 }>();
 
 // ============================================================================
@@ -80,6 +95,7 @@ const selectedDateRange = ref<string>('last_7_days');
 const topNEnabled = ref<boolean>(false);
 const selectedChartType = ref<'bar' | 'pie'>('bar');
 const selectedDataType = ref<'collection' | 'action'>('collection');
+const selectedIP = ref<string | null>(null);
 
 const dateRangeOptions = [
   { text: 'Last 24 Hours', value: 'last_24_hours' },
@@ -97,6 +113,16 @@ const dataTypeOptions = [
   { text: 'By Collection', value: 'collection' },
   { text: 'By Action', value: 'action' },
 ];
+
+const ipFilterOptions = computed(() => {
+  return [
+    { text: 'All IPs', value: null },
+    ...props.availableIPs.map((ip) => ({
+      text: `${ip.ip} (${ip.count} requests, ${ip.percentage}%)`,
+      value: ip.ip,
+    })),
+  ];
+});
 
 // ============================================================================
 // Methods
@@ -157,6 +183,13 @@ function handleChartTypeChange(value: 'bar' | 'pie'): void {
  */
 function handleDataTypeChange(value: 'collection' | 'action'): void {
   emit('data-type-change', value);
+}
+
+/**
+ * Handle IP filter change
+ */
+function handleIPFilterChange(value: string | null): void {
+  emit('ip-filter-change', value);
 }
 
 // ============================================================================

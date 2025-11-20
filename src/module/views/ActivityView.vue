@@ -29,11 +29,28 @@
     <!-- Filters -->
     <FilterPanel
       :total-count="byCollection.length"
+      :show-ip-filter="true"
+      :available-ips="availableIPs"
       @date-range-change="handleDateRangeChange"
       @top-n-change="handleTopNChange"
       @chart-type-change="handleChartTypeChange"
       @data-type-change="handleDataTypeChange"
+      @ip-filter-change="handleIPFilterChange"
     />
+
+    <!-- IP Filter Indicator -->
+    <div v-if="selectedIP" class="ip-filter-indicator">
+      <v-icon name="language" small />
+      <span>Viewing activity for IP: <strong>{{ selectedIP }}</strong></span>
+      <v-button
+        v-tooltip.bottom="'Clear IP filter'"
+        x-small
+        secondary
+        @click="handleIPFilterChange(null)"
+      >
+        <v-icon name="close" x-small />
+      </v-button>
+    </div>
 
     <!-- Stats Summary -->
     <div v-if="!loading && !error && statistics" class="stats-summary">
@@ -214,6 +231,8 @@ const {
   byAction,
   dateRange,
   fetchActivity,
+  fetchTopIPs,
+  fetchActivityByIP,
   refresh,
   clearError,
 } = useActivityAnalytics();
@@ -226,6 +245,8 @@ const showTopTen = ref<boolean>(false);
 const chartType = ref<'bar' | 'pie'>('bar');
 const dataType = ref<'collection' | 'action'>('collection');
 const currentDateRange = ref<{ start: string; end: string } | null>(null);
+const availableIPs = ref<Array<{ ip: string; count: number; percentage: number }>>([]);
+const selectedIP = ref<string | null>(null);
 
 const collectionTableHeaders = [
   { text: 'Collection', value: 'collection', width: 300 },
@@ -309,6 +330,17 @@ function getActionColor(action: string): string {
  */
 async function handleDateRangeChange(dateRange: { start: string; end: string }): Promise<void> {
   currentDateRange.value = dateRange;
+  selectedIP.value = null; // Clear IP filter on date range change
+
+  // Fetch top IPs for the date range
+  const topIPs = await fetchTopIPs({
+    start_date: dateRange.start,
+    end_date: dateRange.end,
+    limit: 10,
+  });
+  availableIPs.value = topIPs;
+
+  // Fetch activity data
   await fetchActivity({
     start_date: dateRange.start,
     end_date: dateRange.end,
@@ -338,10 +370,39 @@ function handleDataTypeChange(type: 'collection' | 'action'): void {
 }
 
 /**
+ * Handle IP filter change
+ */
+async function handleIPFilterChange(ip: string | null): Promise<void> {
+  selectedIP.value = ip;
+
+  if (!currentDateRange.value) return;
+
+  if (ip) {
+    // Fetch activity for specific IP
+    await fetchActivityByIP(ip, {
+      start_date: currentDateRange.value.start,
+      end_date: currentDateRange.value.end,
+      limit: 10,
+    });
+  } else {
+    // Fetch all activity (no IP filter)
+    await fetchActivity({
+      start_date: currentDateRange.value.start,
+      end_date: currentDateRange.value.end,
+      limit: 10,
+    });
+  }
+}
+
+/**
  * Handle refresh button click
  */
 async function handleRefresh(): Promise<void> {
-  await refresh();
+  if (currentDateRange.value) {
+    await handleDateRangeChange(currentDateRange.value);
+  } else {
+    await refresh();
+  }
 }
 
 // ============================================================================
@@ -394,6 +455,24 @@ onMounted(async () => {
 /* Error Notice */
 .error-notice {
   margin-bottom: 16px;
+}
+
+/* IP Filter Indicator */
+.ip-filter-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: var(--primary-10);
+  border: 1px solid var(--primary-25);
+  border-radius: 6px;
+  color: var(--primary);
+  font-size: 14px;
+}
+
+.ip-filter-indicator strong {
+  color: var(--primary);
+  font-weight: 600;
 }
 
 /* Stats Summary */
