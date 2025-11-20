@@ -158,10 +158,10 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 ### Backend Implementation for User Story 3
 
-- [ ] T057 [US3] Extend ActivityService with IP filtering methods in src/endpoint/services/activity-service.ts
-- [ ] T058 [US3] Implement GET /activity/ips/:ip route in src/endpoint/routes/activity.ts (IP-specific statistics)
-- [ ] T059 [US3] Implement GET /activity/timeseries route in src/endpoint/routes/timeseries.ts (time-series data for charts)
-- [ ] T060 [US3] Register new routes in src/endpoint/index.ts router
+- [X] T057 [US3] Extend ActivityService with IP filtering methods in src/endpoint/services/activity-service.ts
+- [X] T058 [US3] Implement GET /activity/ips/:ip route in src/endpoint/routes/activity.ts (IP-specific statistics)
+- [X] T059 [US3] Implement GET /activity/timeseries route in src/endpoint/routes/activity.ts (time-series data for charts)
+- [X] T060 [US3] Register new routes in src/endpoint/index.ts router (already registered via registerActivityRoutes)
 
 ### Frontend Implementation for User Story 3
 
