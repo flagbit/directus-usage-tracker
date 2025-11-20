@@ -13,12 +13,17 @@
   ],
   "license": "MIT",
   "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
+    "name": "Flagbit GmbH & Co. KG",
+    "email": "info@flagbit.de",
+    "url": "https://www.flagbit.de"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/directus-extension-usage-analytics"
+    "url": "https://github.com/flagbit/directus-usage-tracker"
+  },
+  "homepage": "https://github.com/flagbit/directus-usage-tracker#readme",
+  "bugs": {
+    "url": "https://github.com/flagbit/directus-usage-tracker/issues"
   },
   "icon": "analytics",
   "directus:extension": {
@@ -69,5 +74,13 @@
   "dependencies": {
     "@directus/sdk": "^17.0.0",
     "chart.js": "^4.4.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
