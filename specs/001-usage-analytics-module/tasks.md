@@ -115,9 +115,9 @@ description: "Task list for Directus Usage Analytics Bundle Extension"
 
 ### Tests for User Story 2
 
-- [ ] T039 [P] [US2] Contract test for GET /usage-analytics-api/activity endpoint in tests/contract/activity-api.test.ts
-- [ ] T040 [P] [US2] Integration test for activity service aggregation in tests/integration/activity-service.test.ts
-- [ ] T041 [P] [US2] Unit test for ActivityChart component in tests/unit/components/ActivityChart.test.ts
+- [X] T039 [P] [US2] Contract test for GET /usage-analytics-api/activity endpoint in tests/contract/activity-api.test.ts
+- [X] T040 [P] [US2] Integration test for activity service aggregation in tests/integration/activity-service.test.ts
+- [X] T041 [P] [US2] Unit test for ActivityChart component in tests/unit/components/ActivityChart.test.ts
 
 ### Backend Implementation for User Story 2
 
