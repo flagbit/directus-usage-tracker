@@ -63,8 +63,8 @@ services:
       # CACHE_STORE: 'redis'
       # REDIS: 'redis://redis:6379'
     volumes:
-      # Mount extension for development
-      - ./dist:/directus/extensions/directus-extension-usage-analytics:ro
+      # Mount entire project for development (Directus will build from source)
+      - .:/directus/extensions/directus-extension-usage-analytics:ro
       - directus-uploads:/directus/uploads
     depends_on:
       database:

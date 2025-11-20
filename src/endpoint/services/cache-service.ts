@@ -6,7 +6,7 @@
  * @module cache-service
  */
 
-import { CACHE_TTL, CACHE_KEYS } from '@shared/constants';
+import { CACHE_TTL, CACHE_KEYS } from '../../shared/constants';
 
 // ============================================================================
 // Types

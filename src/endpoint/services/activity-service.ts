@@ -15,7 +15,7 @@ import type {
   ActivityByAction,
 } from '@shared/types';
 import { CacheService } from './cache-service';
-import { CACHE_TTL } from '@shared/constants';
+import { CACHE_TTL } from '../../shared/constants';
 
 /**
  * Activity query options

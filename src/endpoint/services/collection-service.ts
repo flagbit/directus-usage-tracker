@@ -13,7 +13,7 @@ import type { Logger } from 'pino';
 import type { CollectionUsage } from '@shared/types';
 import { getTableRowCount, getBulkTableRowCounts } from '../utils/database-helpers';
 import { CacheService } from './cache-service';
-import { CACHE_TTL } from '@shared/constants';
+import { CACHE_TTL } from '../../shared/constants';
 
 /**
  * Service for managing collection storage analytics

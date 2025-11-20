@@ -6,7 +6,7 @@
  */
 
 import type { ChartConfiguration, ChartDataset } from '@shared/types';
-import { CHART_COLORS, CHART_PALETTE, DEFAULT_CHART_OPTIONS } from '@shared/constants';
+import { CHART_COLORS, CHART_PALETTE, DEFAULT_CHART_OPTIONS } from '../../shared/constants';
 
 // ============================================================================
 // Chart Configuration Generators

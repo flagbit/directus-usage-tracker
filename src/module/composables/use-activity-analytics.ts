@@ -10,7 +10,7 @@
 import { ref, computed, type Ref } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import type { ActivityStatistics, ActivityByCollection, ActivityByAction } from '@shared/types';
-import { API_ENDPOINTS } from '@shared/constants';
+import { API_ENDPOINTS } from '../../shared/constants';
 
 /**
  * Activity query options

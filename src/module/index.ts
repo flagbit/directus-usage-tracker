@@ -8,7 +8,7 @@
  */
 
 import { defineModule } from '@directus/extensions-sdk';
-import { MODULE_CONFIG } from '@shared/constants';
+import { MODULE_CONFIG } from '../shared/constants';
 
 /**
  * Usage Analytics Module

@@ -1,0 +1,73 @@
+{
+  "name": "directus-extension-usage-analytics",
+  "version": "1.0.0",
+  "description": "Visual analytics for collection storage usage and API request patterns in Directus",
+  "type": "module",
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-extension-bundle",
+    "analytics",
+    "monitoring",
+    "usage"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/directus-extension-usage-analytics"
+  },
+  "icon": "analytics",
+  "directus:extension": {
+    "type": "bundle",
+    "path": {
+      "app": "dist/app.js",
+      "api": "dist/api.js"
+    },
+    "entries": [
+      {
+        "type": "module",
+        "name": "usage-analytics",
+        "source": "src/module/index.ts"
+      },
+      {
+        "type": "endpoint",
+        "name": "usage-analytics-api",
+        "source": "src/endpoint/index.ts"
+      }
+    ],
+    "host": "^10.0.0 || ^11.0.0",
+    "partial": true
+  },
+  "scripts": {
+    "build": "directus-extension build",
+    "dev": "directus-extension build --watch",
+    "link": "directus-extension link",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.vue",
+    "format": "prettier --write \"**/*.{ts,vue,json,md}\"",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "@directus/extensions-sdk": "^12.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitest/ui": "^1.0.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-vue": "^9.17.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.2.0",
+    "vitest": "^1.0.0",
+    "vue": "^3.3.0",
+    "vue-tsc": "^1.8.0"
+  },
+  "dependencies": {
+    "@directus/sdk": "^17.0.0",
+    "chart.js": "^4.4.0"
+  }
+}
