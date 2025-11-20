@@ -39,6 +39,30 @@
 - **Responsive design** - Works on desktop, tablet, and mobile
 - **Directus theme integration** - Respects dark/light mode
 
+## Quick Start with Docker (Testing)
+
+The fastest way to test this extension locally:
+
+```bash
+# 1. Build the extension
+npm install
+npm run build
+
+# 2. Start Directus with Docker (automated script)
+./start-testing.sh
+
+# Or manually:
+docker-compose up -d
+```
+
+**Access Directus**: http://localhost:8055
+- Email: `admin@example.com`
+- Password: `admin123`
+
+**Find the extension**: Settings → Usage Analytics
+
+📖 **Full testing guide**: See [TESTING.md](./TESTING.md)
+
 ## Installation
 
 ### Via npm (Recommended)

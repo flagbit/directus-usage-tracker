@@ -43,3 +43,7 @@ temp/
 
 # Editor files
 *.code-workspace
+
+# Docker
+docker-compose.override.yml
+.env.docker.local
