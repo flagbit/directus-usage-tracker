@@ -75,6 +75,11 @@
     "@directus/sdk": "^17.0.0",
     "chart.js": "^4.4.0"
   },
+  "overrides": {
+    "@directus/extensions-sdk": {
+      "vite": "4.5.14"
+    }
+  },
   "files": [
     "dist",
     "README.md",
