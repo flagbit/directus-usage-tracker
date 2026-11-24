@@ -82,5 +82,10 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "overrides": {
+    "@directus/extensions-sdk": {
+      "vite": "4.5.14"
+    }
   }
 }
